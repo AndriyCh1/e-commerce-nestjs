@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Product } from '../product/product.entity';
 import { User } from '../user/user.entity';
-import { JoinColumn } from 'typeorm/browser';
+import { JoinColumn } from 'typeorm';
 
 @Entity()
 export class Cart {

@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
+import { Env } from './common/enums';
 
 @Module({
   imports: [
@@ -14,14 +15,14 @@ import { CartModule } from './cart/cart.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => ({
         type: 'postgres',
-        host: configService.get<string>('POSTGRES_HOST'),
-        port: configService.get<number>('POSTGRES_PORT'),
-        database: configService.get<string>('POSTGRES_DB'),
-        username: configService.get<string>('POSTGRES_USER'),
-        password: configService.get<string>('POSTGRES_PASSWORD'),
-        entities: ['dist/**/entities/*.entity.js'],
+        host: configService.get<string>(Env.DB_HOST),
+        port: configService.get<number>(Env.DB_PORT),
+        database: configService.get<string>(Env.DB_NAME),
+        username: configService.get<string>(Env.DB_USER),
+        password: configService.get<string>(Env.DB_PASSWORD),
+        entities: ['dist/**/*.entity.js'],
         migrations: ['dist/migrations/*.js'],
-        logging: true,
+        logging: false,
         synchronize: true,
       }),
       inject: [ConfigService],

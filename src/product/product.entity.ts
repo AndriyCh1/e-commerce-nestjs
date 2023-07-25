@@ -7,7 +7,7 @@ export class Product extends AbstractEntity {
   @Column({ type: 'varchar', length: '100' })
   name: string;
 
-  @Column({ type: 'varchar', length: '1000' })
+  @Column({ type: 'varchar', length: '1000', nullable: true })
   description: string;
 
   @Column({ type: 'int', default: 0 })
