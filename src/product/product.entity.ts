@@ -1,5 +1,6 @@
 import { AbstractEntity } from '../common/entities/abstract.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { Cart } from '../cart/cart.entity';
 
 @Entity()
 export class Product extends AbstractEntity {
@@ -14,4 +15,7 @@ export class Product extends AbstractEntity {
 
   @Column({ type: 'int', default: 0 })
   price: number;
+
+  @OneToMany(() => Cart, (cart) => cart.product, { onDelete: 'CASCADE' })
+  cartItems: Cart[];
 }
