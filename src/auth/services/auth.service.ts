@@ -39,7 +39,7 @@ export class AuthService {
     });
 
     const token = await this.signToken({
-      id: createdUser.id,
+      sub: createdUser.id,
       email: createdUser.email,
       role: createdUser.role,
     });
@@ -63,7 +63,7 @@ export class AuthService {
     }
 
     const token = await this.signToken({
-      id: user.id,
+      sub: user.id,
       email: user.email,
       role: user.role,
     });
@@ -77,13 +77,10 @@ export class AuthService {
       Env.JWT_EXPIRATION_TIME,
     );
 
-    const token = await this.jwtService.signAsync(
-      { sub: payload.id, ...payload },
-      {
-        secret,
-        expiresIn: expirationTime,
-      },
-    );
+    const token = await this.jwtService.signAsync(payload, {
+      secret,
+      expiresIn: expirationTime,
+    });
 
     return token;
   }
