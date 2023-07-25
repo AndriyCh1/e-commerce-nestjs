@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserModule } from './users/user.module';
-import { ProductModule } from './products/product.module';
+import { UserModule } from './user/user.module';
+import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 
 @Module({
