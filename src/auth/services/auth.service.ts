@@ -8,7 +8,7 @@ import { LoginDto, SignupDto } from '../dto';
 import * as bcrypt from 'bcrypt';
 import { UserService } from '../../user/services';
 import { ConfigService } from '@nestjs/config';
-import { Env } from '../../common/enums';
+import { Env, PostgresErrorCode } from '../../common/enums';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from '../interfaces';
 
@@ -22,29 +22,28 @@ export class AuthService {
 
   async signup(dto: SignupDto): Promise<{ access_token: string }> {
     const { email, password, role } = dto;
-    const user = await this.userService.findOneByEmail(email);
-
-    if (user) {
-      throw new BadRequestException(
-        `User with such email: ${email} already exists `,
-      );
-    }
 
     const hash = await bcrypt.hash(password, 7);
 
-    const createdUser = await this.userService.create({
-      email,
-      password: hash,
-      role,
-    });
+    try {
+      const createdUser = await this.userService.create({
+        email,
+        password: hash,
+        role,
+      });
 
-    const token = await this.signToken({
-      sub: createdUser.id,
-      email: createdUser.email,
-      role: createdUser.role,
-    });
+      const token = await this.signToken({
+        sub: createdUser.id,
+        email: createdUser.email,
+        role: createdUser.role,
+      });
 
-    return { access_token: token };
+      return { access_token: token };
+    } catch (error) {
+      if (error?.code === PostgresErrorCode.UniqueViolation) {
+        throw new BadRequestException('User with that email already exists');
+      }
+    }
   }
 
   async login(dto: LoginDto): Promise<{ access_token: string }> {
@@ -56,10 +55,13 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect credentials provided');
     }
 
-    const passwordMatches = await bcrypt.compare(password, user.password);
+    const isPasswordMatching = await this.verifyPassword(
+      password,
+      user.password,
+    );
 
-    if (!passwordMatches) {
-      throw new UnauthorizedException('Incorrect credentials provided');
+    if (!isPasswordMatching) {
+      throw new BadRequestException('Wrong credentials provided');
     }
 
     const token = await this.signToken({
@@ -83,5 +85,9 @@ export class AuthService {
     });
 
     return token;
+  }
+
+  async verifyPassword(password: string, hash: string): Promise<boolean> {
+    return await bcrypt.compare(password, hash);
   }
 }
