@@ -10,7 +10,7 @@ import { UserRepository } from '../repositories';
 import { CreateUserDto, UpdateProfileDto, UpdateUserDto } from '../dto';
 import { User } from '../user.entity';
 import { AuthService } from '../../auth/services/auth.service';
-import { PageOptionsDto } from '../../common/dto';
+import { FindAllUsersDto } from '../dto/find-all-users.dto';
 
 @Injectable()
 export class UserService {
@@ -31,7 +31,7 @@ export class UserService {
     return await this.userRepository.findOne({ where: { id } });
   }
 
-  async findAll(dto: PageOptionsDto): Promise<User[]> {
+  async findAll(dto: FindAllUsersDto): Promise<User[]> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
     const sortBy = 'user.' + dto.sortBy;
 

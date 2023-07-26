@@ -13,7 +13,7 @@ import { UpdateProfileDto, UpdateUserDto } from '../dto';
 import { UserService } from '../services';
 import { Role } from '../../common/enums';
 import { CurrentUser, Roles } from '../../auth/decorators';
-import { PageOptionsDto } from '../../common/dto';
+import { FindAllUsersDto } from '../dto/find-all-users.dto';
 
 @Controller('users')
 export class UserController {
@@ -22,14 +22,14 @@ export class UserController {
   @Get('profile')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
-  async getProfile(@CurrentUser('id') id: string) {
+  async getProfile(@CurrentUser('id') id: number) {
     return await this.userService.findOne(id);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  async findAll(@Query() dto: PageOptionsDto) {
+  async findAll(@Query() dto: FindAllUsersDto) {
     return await this.userService.findAll(dto);
   }
 
@@ -37,7 +37,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
   async updateProfile(
-    @CurrentUser('id') id: string,
+    @CurrentUser('id') id: number,
     @Body() dto: UpdateProfileDto,
   ) {
     return await this.userService.updateProfile(id, dto);
@@ -46,7 +46,7 @@ export class UserController {
   @Patch(':userId')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  async update(@Param('userId') userId: string, @Body() dto: UpdateUserDto) {
+  async update(@Param('userId') userId: number, @Body() dto: UpdateUserDto) {
     return await this.userService.updateUser(userId, dto);
   }
 
@@ -54,7 +54,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
   async deleteProfile(
-    @CurrentUser('id') id: string,
+    @CurrentUser('id') id: number,
     @Body() dto: UpdateProfileDto,
   ) {
     await this.userService.delete(id);
@@ -63,7 +63,7 @@ export class UserController {
   @Delete(':userId')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  async delete(@Param('userId') userId: string, @Body() dto: UpdateUserDto) {
+  async delete(@Param('userId') userId: number, @Body() dto: UpdateUserDto) {
     await this.userService.delete(userId);
   }
 }

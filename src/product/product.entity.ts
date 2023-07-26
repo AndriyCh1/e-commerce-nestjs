@@ -13,7 +13,7 @@ export class Product extends AbstractEntity {
   @Column({ type: 'int', default: 0 })
   quantity: number;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'float', default: 0 })
   price: number;
 
   @OneToMany(() => Cart, (cart) => cart.product, { onDelete: 'CASCADE' })

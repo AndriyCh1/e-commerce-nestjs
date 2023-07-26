@@ -6,7 +6,7 @@ import { JoinColumn } from 'typeorm';
 @Entity()
 export class Cart {
   @PrimaryGeneratedColumn('increment')
-  id: string;
+  id: number;
 
   @Column({ type: 'int', default: 0 })
   total: number;
