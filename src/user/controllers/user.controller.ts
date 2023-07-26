@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
@@ -12,6 +13,7 @@ import { UpdateProfileDto, UpdateUserDto } from '../dto';
 import { UserService } from '../services';
 import { Role } from '../../common/enums';
 import { CurrentUser, Roles } from '../../auth/decorators';
+import { PageOptionsDto } from '../../common/dto';
 
 @Controller('users')
 export class UserController {
@@ -27,9 +29,8 @@ export class UserController {
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  // TODO: implement pagination
-  async findAll() {
-    return await this.userService.findAll();
+  async findAll(@Query() dto: PageOptionsDto) {
+    return await this.userService.findAll(dto);
   }
 
   @Patch('profile')

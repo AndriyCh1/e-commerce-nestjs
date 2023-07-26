@@ -10,6 +10,7 @@ import { UserRepository } from '../repositories';
 import { CreateUserDto, UpdateProfileDto, UpdateUserDto } from '../dto';
 import { User } from '../user.entity';
 import { AuthService } from '../../auth/services/auth.service';
+import { PageOptionsDto } from '../../common/dto';
 
 @Injectable()
 export class UserService {
@@ -30,8 +31,13 @@ export class UserService {
     return await this.userRepository.findOne({ where: { id } });
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+  async findAll(dto: PageOptionsDto): Promise<User[]> {
+    const queryBuilder = this.userRepository.createQueryBuilder('user');
+    const sortBy = 'user.' + dto.sortBy;
+
+    queryBuilder.orderBy(sortBy, dto.order).skip(dto.skip).take(dto.pageSize);
+    const { entities } = await queryBuilder.getRawAndEntities();
+    return entities;
   }
 
   async findOneByEmail(email: string): Promise<User> {
