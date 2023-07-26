@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  forwardRef,
   Inject,
   Injectable,
   UnauthorizedException,
@@ -17,13 +18,14 @@ export class AuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
-    @Inject(UserService) private readonly userService: UserService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
   ) {}
 
   async signup(dto: SignupDto): Promise<{ access_token: string }> {
     const { email, password, role } = dto;
 
-    const hash = await bcrypt.hash(password, 7);
+    const hash = await this.hashPassword(password);
 
     try {
       const createdUser = await this.userService.create({
@@ -89,5 +91,9 @@ export class AuthService {
 
   async verifyPassword(password: string, hash: string): Promise<boolean> {
     return await bcrypt.compare(password, hash);
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 7);
   }
 }
