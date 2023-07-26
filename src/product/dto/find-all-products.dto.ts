@@ -5,7 +5,7 @@ import { SortBy } from '../enums';
 export class FindAllProductsDto extends PageOptionsDto {
   @IsOptional()
   @IsString()
-  public name?: string;
+  name?: string;
 
   @IsEnum(SortBy)
   @IsOptional()

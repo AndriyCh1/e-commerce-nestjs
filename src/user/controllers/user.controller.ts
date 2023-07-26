@@ -23,7 +23,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
   async getProfile(@CurrentUser('id') id: number) {
-    return await this.userService.findOne(id);
+    return await this.userService.findById(id);
   }
 
   @Get()
@@ -53,17 +53,14 @@ export class UserController {
   @Delete('profile')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
-  async deleteProfile(
-    @CurrentUser('id') id: number,
-    @Body() dto: UpdateProfileDto,
-  ) {
+  async deleteProfile(@CurrentUser('id') id: number) {
     await this.userService.delete(id);
   }
 
   @Delete(':userId')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  async delete(@Param('userId') userId: number, @Body() dto: UpdateUserDto) {
+  async delete(@Param('userId') userId: number) {
     await this.userService.delete(userId);
   }
 }
