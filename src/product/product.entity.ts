@@ -1,6 +1,7 @@
-import { AbstractEntity } from '../common/entities/abstract.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
+
 import { Cart } from '../cart/cart.entity';
+import { AbstractEntity } from '../common/entities/abstract.entity';
 
 @Entity()
 export class Product extends AbstractEntity {

@@ -5,12 +5,13 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { LoginDto, SignupDto } from '../dto';
-import * as bcrypt from 'bcrypt';
-import { UserService } from '../../user/services';
 import { ConfigService } from '@nestjs/config';
-import { Env, PostgresErrorCode } from '../../common/enums';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+
+import { Env, PostgresErrorCode } from '../../common/enums';
+import { UserService } from '../../user/services';
+import { LoginDto, SignupDto } from '../dto';
 import { JwtPayload } from '../interfaces';
 
 @Injectable()

@@ -11,11 +11,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+
+import { Roles } from '../../auth/decorators';
+import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
+import { Role } from '../../common/enums';
 import { CreateProductDto, FindAllProductsDto, UpdateProductDto } from '../dto';
 import { ProductService } from '../services';
-import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
-import { Roles } from '../../auth/decorators';
-import { Role } from '../../common/enums';
 
 @Controller('products')
 export class ProductController {

@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+
 import { Role } from '../../common/enums';
 
 export class SignupDto {

@@ -6,12 +6,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository } from '../repositories';
-import { CreateUserDto, UpdateProfileDto, UpdateUserDto } from '../dto';
-import { User } from '../user.entity';
+
 import { AuthService } from '../../auth/services/auth.service';
 import { BaseEntityService } from '../../common/services/base-entity.service';
+import { CreateUserDto, UpdateProfileDto, UpdateUserDto } from '../dto';
 import { FindAllUsersDto } from '../dto/find-all-users.dto';
+import { UserRepository } from '../repositories';
+import { User } from '../user.entity';
 
 @Injectable()
 export class UserService extends BaseEntityService<User> {

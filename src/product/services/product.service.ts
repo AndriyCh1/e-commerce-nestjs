@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Product } from '../product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProductRepository } from '../repositories';
-import { CreateProductDto, FindAllProductsDto } from '../dto';
+
 import { BaseEntityService } from '../../common/services/base-entity.service';
+import { CreateProductDto, FindAllProductsDto } from '../dto';
+import { Product } from '../product.entity';
+import { ProductRepository } from '../repositories';
 
 @Injectable()
 export class ProductService extends BaseEntityService<Product> {
@@ -16,6 +17,7 @@ export class ProductService extends BaseEntityService<Product> {
 
   async create(dto: CreateProductDto): Promise<Product> {
     const product = this.productRepository.create(dto);
+
     return await this.productRepository.save(product);
   }
 

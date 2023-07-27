@@ -1,7 +1,8 @@
 import { Column, Entity, Index, OneToMany } from 'typeorm';
+
+import { Cart } from '../cart/cart.entity';
 import { AbstractEntity } from '../common/entities/abstract.entity';
 import { Role } from '../common/enums';
-import { Cart } from '../cart/cart.entity';
 
 @Entity()
 export class User extends AbstractEntity {

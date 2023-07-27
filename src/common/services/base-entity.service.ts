@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository, FindOptionsWhere, DeepPartial } from 'typeorm';
+import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
 
 export type EntityId = number | string;
 
@@ -24,6 +24,7 @@ export abstract class BaseEntityService<T extends { id }> {
 
   async update(id: EntityId, entity: DeepPartial<T>): Promise<T> {
     await this.repository.update(id, entity);
+
     return await this.findById(id);
   }
 

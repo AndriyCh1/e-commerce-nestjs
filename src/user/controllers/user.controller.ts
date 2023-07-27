@@ -8,12 +8,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
-import { UpdateProfileDto, UpdateUserDto } from '../dto';
-import { UserService } from '../services';
-import { Role } from '../../common/enums';
+
 import { CurrentUser, Roles } from '../../auth/decorators';
+import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
+import { Role } from '../../common/enums';
+import { UpdateProfileDto, UpdateUserDto } from '../dto';
 import { FindAllUsersDto } from '../dto/find-all-users.dto';
+import { UserService } from '../services';
 
 @Controller('users')
 export class UserController {
