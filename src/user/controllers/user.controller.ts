@@ -3,19 +3,22 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser, Roles } from '../../auth/decorators';
 import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
 import { Role } from '../../common/enums';
-import { UpdateProfileDto, UpdateUserDto } from '../dto';
-import { FindAllUsersDto } from '../dto/find-all-users.dto';
+import { FindAllUsersDto, UpdateProfileDto, UpdateUserDto } from '../dto';
 import { UserService } from '../services';
 
+@ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -44,13 +47,14 @@ export class UserController {
     return await this.userService.updateProfile(id, dto);
   }
 
-  @Patch(':userId')
+  @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  async update(@Param('userId') userId: number, @Body() dto: UpdateUserDto) {
-    return await this.userService.updateUser(userId, dto);
+  async update(@Param('id') id: number, @Body() dto: UpdateUserDto) {
+    return await this.userService.updateUser(id, dto);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('profile')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
@@ -58,10 +62,11 @@ export class UserController {
     await this.userService.delete(id);
   }
 
-  @Delete(':userId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  async delete(@Param('userId') userId: number) {
-    await this.userService.delete(userId);
+  async delete(@Param('id') id: number) {
+    await this.userService.delete(id);
   }
 }

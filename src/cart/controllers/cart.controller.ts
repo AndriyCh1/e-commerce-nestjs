@@ -10,6 +10,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser, Roles } from '../../auth/decorators';
 import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
@@ -19,6 +20,7 @@ import { Cart } from '../cart.entity';
 import { CreateCartItemDto, UpdateCartItemDto } from '../dto';
 import { CartService } from '../services/cart.service';
 
+@ApiTags('cart')
 @Controller('cart/items')
 export class CartController {
   constructor(private readonly cartService: CartService) {}

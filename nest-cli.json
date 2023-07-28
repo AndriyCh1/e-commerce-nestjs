@@ -4,6 +4,15 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "assets": ["**/*.html"],
-    "watchAssets": true
+    "watchAssets": true,
+    "plugins": [
+      {
+        "name": "@nestjs/swagger/plugin",
+        "options": {
+          "introspectComments": true,
+          "dtoFileNameSuffix": [".dto.ts"]
+        }
+      }
+    ]
   }
 }

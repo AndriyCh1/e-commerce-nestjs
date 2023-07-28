@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from '../../auth/services/auth.service';
 import { BaseEntityService } from '../../common/services/base-entity.service';
 import { CreateUserDto, UpdateProfileDto, UpdateUserDto } from '../dto';
-import { FindAllUsersDto } from '../dto/find-all-users.dto';
+import { FindAllUsersDto } from '../dto';
 import { UserRepository } from '../repositories';
 import { User } from '../user.entity';
 

@@ -1,8 +1,10 @@
 import { Controller, HttpCode, HttpStatus, Post, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { ConfirmEmailDto } from '../dto';
 import { EmailConfirmationService } from '../services/email-confirmation.service';
 
+@ApiTags('email')
 @Controller('email-confirmation')
 export class EmailConfirmationController {
   constructor(

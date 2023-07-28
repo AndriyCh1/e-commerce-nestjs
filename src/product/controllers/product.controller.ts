@@ -11,6 +11,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { Roles } from '../../auth/decorators';
 import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
@@ -18,6 +19,7 @@ import { Role } from '../../common/enums';
 import { CreateProductDto, FindAllProductsDto, UpdateProductDto } from '../dto';
 import { ProductService } from '../services';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
