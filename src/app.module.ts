@@ -7,6 +7,7 @@ import { CartModule } from './cart/cart.module';
 import { Env } from './common/enums';
 import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     ProductModule,
     CartModule,
+    EmailModule,
   ],
   controllers: [],
   providers: [],

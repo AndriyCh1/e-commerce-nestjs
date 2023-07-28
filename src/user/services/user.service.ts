@@ -80,4 +80,8 @@ export class UserService extends BaseEntityService<User> {
 
     return await this.update(id, { ...dto, password });
   }
+
+  async markEmailAsConfirmed(email: string): Promise<void> {
+    await this.userRepository.update({ email }, { isEmailConfirmed: true });
+  }
 }
