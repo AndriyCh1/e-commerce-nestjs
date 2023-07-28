@@ -1,6 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { UpdateCartItemDto } from '../../../dist/cart/dto/update-cart-item.dto';
 import { BaseEntityService } from '../../common/services/base-entity.service';
 import { Product } from '../../product/product.entity';
 import { ProductService } from '../../product/services';
@@ -53,13 +58,30 @@ export class CartService extends BaseEntityService<Cart> {
   }
 
   public async findById(id: Cart['id']): Promise<Cart> {
-    return await this.cartRepository.findOne({ where: { id } });
+    const cartItem = await this.cartRepository.findOne({ where: { id } });
+
+    if (!cartItem) {
+      throw new NotFoundException('Cart item not found');
+    }
+
+    return cartItem;
   }
 
   public async findAll(userId: User['id']): Promise<Cart[]> {
     return await this.cartRepository.find({ where: { user: { id: userId } } });
   }
 
+  public async update(id: Cart['id'], dto: UpdateCartItemDto): Promise<Cart> {
+    const cartItem = await this.findById(id);
+
+    if (dto.quantity > cartItem.product.quantity) {
+      throw new BadRequestException('Not enough products');
+    }
+
+    await this.cartRepository.update(id, dto);
+
+    return await this.findById(id);
+  }
   public async deleteAll(userId: User['id']): Promise<void> {
     await this.cartRepository
       .createQueryBuilder('cart')
