@@ -1,6 +1,6 @@
 import { IsInt, IsNotEmpty, IsPositive } from 'class-validator';
 
-export class UpdateCartItemDto {
+export class UpdateCartItemQuantityDto {
   @IsInt()
   @IsPositive()
   @IsNotEmpty()

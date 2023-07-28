@@ -59,4 +59,13 @@ export class CartService extends BaseEntityService<Cart> {
   public async findAll(userId: User['id']): Promise<Cart[]> {
     return await this.cartRepository.find({ where: { user: { id: userId } } });
   }
+
+  public async deleteAll(userId: User['id']): Promise<void> {
+    await this.cartRepository
+      .createQueryBuilder('cart')
+      .innerJoin('cart.user', 'user')
+      .delete()
+      .where('user.id = :userId', { userId })
+      .execute();
+  }
 }
