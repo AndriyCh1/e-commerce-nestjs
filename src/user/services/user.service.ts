@@ -1,14 +1,12 @@
 import {
   BadRequestException,
-  forwardRef,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { AuthService } from '../../auth/services/auth.service';
 import { BaseEntityService } from '../../common/services/base-entity.service';
+import { hashPassword, verifyPassword } from '../../common/utils';
 import { CreateUserDto, UpdateProfileDto, UpdateUserDto } from '../dto';
 import { FindAllUsersDto } from '../dto';
 import { UserRepository } from '../repositories';
@@ -19,8 +17,6 @@ export class UserService extends BaseEntityService<User> {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
   ) {
     super(userRepository, 'User');
   }
@@ -58,7 +54,7 @@ export class UserService extends BaseEntityService<User> {
 
     if (currentPassword && newPassword) {
       const user = await this.userRepository.findOne({ where: { id } });
-      const isCurrentPasswordVerified = await this.authService.verifyPassword(
+      const isCurrentPasswordVerified = await verifyPassword(
         currentPassword,
         user.password,
       );
@@ -67,7 +63,7 @@ export class UserService extends BaseEntityService<User> {
         throw new BadRequestException('Wrong password provided');
       }
 
-      password = await this.authService.hashPassword(newPassword);
+      password = await hashPassword(newPassword);
     }
 
     return await this.update(id, { firstName, secondName, password });
@@ -75,7 +71,7 @@ export class UserService extends BaseEntityService<User> {
 
   async updateUser(id: User['id'], dto: UpdateUserDto): Promise<User> {
     const password = dto.password
-      ? await this.authService.hashPassword(dto.password)
+      ? await hashPassword(dto.password)
       : undefined;
 
     return await this.update(id, { ...dto, password });

@@ -1,15 +1,13 @@
 import {
   BadRequestException,
-  forwardRef,
-  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 
 import { Env, PostgresErrorCode } from '../../common/enums';
+import { hashPassword, verifyPassword } from '../../common/utils';
 import { UserService } from '../../user/services';
 import { LoginDto, SignupDto } from '../dto';
 import { JwtPayload } from '../interfaces';
@@ -19,14 +17,13 @@ export class AuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
-    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
 
   async signup(dto: SignupDto): Promise<{ access_token: string }> {
     const { email, password, role } = dto;
 
-    const hash = await this.hashPassword(password);
+    const hash = await hashPassword(password);
 
     try {
       const createdUser = await this.userService.create({
@@ -58,10 +55,7 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect credentials provided');
     }
 
-    const isPasswordMatching = await this.verifyPassword(
-      password,
-      user.password,
-    );
+    const isPasswordMatching = await verifyPassword(password, user.password);
 
     if (!isPasswordMatching) {
       throw new BadRequestException('Wrong credentials provided');
@@ -82,19 +76,9 @@ export class AuthService {
       Env.JWT_EXPIRATION_TIME,
     );
 
-    const token = await this.jwtService.signAsync(payload, {
+    return await this.jwtService.signAsync(payload, {
       secret,
       expiresIn: expirationTime,
     });
-
-    return token;
-  }
-
-  async verifyPassword(password: string, hash: string): Promise<boolean> {
-    return await bcrypt.compare(password, hash);
-  }
-
-  async hashPassword(password: string): Promise<string> {
-    return await bcrypt.hash(password, 7);
   }
 }
