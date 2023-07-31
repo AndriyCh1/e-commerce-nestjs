@@ -31,7 +31,7 @@ export class UserService extends BaseEntityService<User> {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
-      throw new NotFoundException(`User with this email does not exist`);
+      throw new NotFoundException(`User with this ${email} does not exist`);
     }
 
     return user;
@@ -53,7 +53,8 @@ export class UserService extends BaseEntityService<User> {
     let password;
 
     if (currentPassword && newPassword) {
-      const user = await this.userRepository.findOne({ where: { id } });
+      const user = await this.findById(id);
+
       const isCurrentPasswordVerified = await verifyPassword(
         currentPassword,
         user.password,

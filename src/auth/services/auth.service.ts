@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
@@ -41,7 +37,7 @@ export class AuthService {
       return { access_token: token };
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
-        throw new BadRequestException('User with that email already exists');
+        throw new BadRequestException(`User with that ${email} already exists`);
       }
     }
   }
@@ -50,10 +46,6 @@ export class AuthService {
     const { email, password } = dto;
 
     const user = await this.userService.findOneByEmail(email);
-
-    if (!user) {
-      throw new UnauthorizedException('Incorrect credentials provided');
-    }
 
     const isPasswordMatching = await verifyPassword(password, user.password);
 
